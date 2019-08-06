@@ -17,7 +17,7 @@ from [its GitHub repo](https://github.com/alkrauss48/growler-friday) and run usi
 Edit the /etc/hosts file to point growlerfriday.com to the IP address of
 the created ec2 instance to access the web server.
 
-## requirements
+## Requirements
 
 Packer and terraform must be installed.
 AWS credentials should be configured in the ~/.aws/credential file, with the following format:
@@ -28,9 +28,6 @@ AWS credentials should be configured in the ~/.aws/credential file, with the fol
 ## Usage
 
 ```bash
-# Set the variables in the .env file. At a minimum, this includes:
-# * DIGITAL_OCEAN_API_TOKEN
-# * SSH_FINGERPRINT
 
 make packer-build
 # This will take about 5 minutes. Copy the Snapshot ID you get at the end
@@ -40,12 +37,16 @@ make terraform-init
 
 make terraform-plan
 <enter Snapshot ID from packer-build command>
-
+# This proceeds with a syntax check
 # If all looks good, then:
 
 make terraform-apply
 <enter Snapshot ID from packer-build command>
-# This will take about a minute
+# This may last a couple of minute to start the terraform architecture in AWS
+
+make terraform-destroy
+<enter Snapshot ID from packer-build command>
+# This will stop all instances that have been launched with terraform-apply
 
 # Done!
 ```
