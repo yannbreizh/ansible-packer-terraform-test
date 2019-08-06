@@ -1,20 +1,25 @@
-include .env
-export $(shell sed 's/=.*//' .env)
+# include .env
+# export $(shell sed 's/=.*//' .env)
 
-terraform-init:
+ti:
 	cd terraform && terraform init && cd -
 
-terraform-plan:
+tp:
 	cd terraform && \
 	terraform plan && \
 	cd -
 
-terraform-apply:
+ta:
 	cd terraform && \
 	terraform apply && \
 	cd -
 
-packer-build:
+td:
+	cd terraform && \
+	terraform destroy && \
+	cd -
+
+pb:
 	cd packer && \
-	packer build template.json && \
+	packer build ec2.json && \
 	cd -

@@ -1,11 +1,15 @@
 ---
 - name: Install nginx
+  become: yes
   apt: name=nginx state=present
 
 - name: Remove default nginx config
+  become: yes
   file: name=/etc/nginx/sites-enabled/default state=absent
 
 - name: Install system nginx config
+  become: yes
   template:
     src: templates/nginx.conf
     dest: /etc/nginx/nginx.conf
+  

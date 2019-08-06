@@ -1,0 +1,34 @@
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "eu-west-3",
+      "source_ami": "ami-0ad37dbbe571ce2a1",
+      "instance_type": "t2.micro",
+      "ssh_username": "ubuntu",
+      "ami_name": "packer-example ec2 {{timestamp}}"
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "script": "scripts/ansible.sh"
+    },
+    {
+      "type": "ansible-local",
+      "playbook_file": "../ansible/site.yml",
+      "role_paths": [
+        "../ansible/roles/git",
+        "../ansible/roles/mysql",
+        "../ansible/roles/nginx",
+        "../ansible/roles/helloworld"
+      ],
+      "group_vars": "../ansible/group_vars"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/cleanup.sh"
+    }
+  ]
+}

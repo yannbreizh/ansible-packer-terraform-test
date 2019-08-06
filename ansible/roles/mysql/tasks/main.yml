@@ -1,13 +1,16 @@
 ---
 - name: Install Mysql package
   apt: name={{ item }} state=present
+  become: yes
   with_items:
    - mysql-server
 
 - name: Create Mysql configuration file
   template: src=templates/my.cnf.j2 dest=/etc/my.cnf
+  become: yes
   notify:
   - restart mysql
 
 - name: Start Mysql Service
   service: name=mysql state=started enabled=yes
+  become: yes

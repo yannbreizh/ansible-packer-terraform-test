@@ -1,0 +1,20 @@
+---
+- name: Copy helloworld.html file to the nginx public zone
+  become: yes
+  template:
+    src: templates/helloworld.html
+    dest: /var/www/html/helloworld.conf
+
+- name: Copy helloworld nginx configuration to sites-available
+  become: yes
+  template:
+    src: templates/helloworld.conf.j2
+    dest: /etc/nginx/sites-available/helloworld.conf
+
+- name: Create sites-enabled symlink for nginx helloworld port 80 configuration
+  become: yes
+  file:
+    src: /etc/nginx/sites-available/helloworld.conf
+    dest: /etc/nginx/sites-enabled/helloworld.conf
+    state: link
+  notify: restart nginx
