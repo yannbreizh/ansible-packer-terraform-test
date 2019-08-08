@@ -7,7 +7,7 @@ variable "ami_name" {
 variable "amis" {
   type = "map"
   default = {
-    "eu-west-3" = "ami-0b6a2e0af12c15a39"
+    "eu-west-3" = "ami-0294a5c813a5ce480"
     "us-east-1" = "ami-b374d5a5"
   }
 }

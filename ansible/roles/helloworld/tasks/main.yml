@@ -1,9 +1,15 @@
 ---
+- name: Create helloworld directory
+  become: yes
+  file:
+    path: /var/www/html/helloworld
+    state: directory
+
 - name: Copy helloworld.html file to the nginx public zone
   become: yes
   template:
     src: templates/helloworld.html
-    dest: /var/www/html/helloworld.conf
+    dest: /var/www/html/helloworld/index.html
 
 - name: Copy helloworld nginx configuration to sites-available
   become: yes
