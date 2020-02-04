@@ -1,0 +1,41 @@
+{
+  "variables": {
+    "proxmox_user": "root@pam",
+    "proxmox_pass": "ProxmoxCp0p",
+    "proxmox_node": "auv05host1",
+    "hostname": "debian-10",
+    "local_domain": "pr.cdn.orange.com",
+    "iso_file": "Shared:iso/debian-10.1.0-amd64-netinst.iso"
+  },
+  "builders": [
+    {
+      "type": "proxmox",
+      "proxmox_url": "https://172.26.9.149:8006/api2/json",
+      "insecure_skip_tls_verify": true,
+      "username": "{{user `proxmox_user`}}",
+      "password": "{{user `proxmox_pass`}}",
+      "node": "{{user `proxmox_node`}}",
+      "network_adapters": [{ "bridge": "vmbr0" }],
+      "disks": [{
+        "type": "scsi",
+        "disk_size": "5G",
+        "storage_pool": "local-lvm",
+        "storage_pool_type": "lvm"
+      }],
+
+      "iso_file": "{{user `iso_file`}}",
+      "http_directory":"config",
+      "boot_wait": "10s",
+      "boot_command": [
+        "<up><tab> ip=dhcp inst.cmdline inst.ks=http://{{.HTTPIP}}:{{.HTTPPort}}/ks.cfg<enter>"
+      ],
+
+      "ssh_username": "root",
+      "ssh_timeout": "15m",
+      "ssh_password": "packer",
+
+      "unmount_iso": true,
+      "template_name": "fedora-28",
+      "template_description": "Fedora 28, generated on {{ isotime \"2006-01-02T15:04:05Z\" }}"
+    }]
+  }

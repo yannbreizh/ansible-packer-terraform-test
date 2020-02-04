@@ -1,0 +1,74 @@
+{
+  "variables": {
+    "proxmox_user": "root@pam",
+    "proxmox_pass": "ProxmoxCp0p",
+    "proxmox_node": "auv05host1",
+    "iso_file": "Shared:iso/proxmox-ve_6.0-1.iso",
+
+    "pm_host1-hostname": "auv61packer1",
+    "pm_host1-fqdn": "auv61packer1.auv61.pre.cdn.orange.com",
+    "pm_host1-ipnm-mgmt": "172.26.9.156",
+    "pm_host1-ip-gw": "172.26.9.145",
+    "pm_host1-ip-mask": "255.255.255.0",
+    "pm_host1-ip-dns1": "193.251.253.128",
+    "pm_host1-login": "root",
+    "pm_host1-passwd": "ProxmoxCp0p",
+    "pm_host1-country": "France",
+    "pm_host1-mail": "test.mail@orange.com"
+},
+  "builders": [
+    {
+      "type": "proxmox",
+      "proxmox_url": "https://172.26.9.149:8006/api2/json",
+      "insecure_skip_tls_verify": true,
+      "username": "{{user `proxmox_user`}}",
+      "password": "{{user `proxmox_pass`}}",
+      "node": "{{user `proxmox_node`}}",
+      "vm_name": "{{user `pm_host1-hostname`}}",
+      "network_adapters": [{ "bridge": "vmbr0" }],
+      "disks": [{
+        "type": "scsi",
+        "disk_size": "128G",
+        "storage_pool": "local-data",
+        "storage_pool_type": "data",
+        "format": "qcow2"
+      }],
+      "memory": 2048,
+      "cores": 1,
+      "vm_id": 201,
+
+      "iso_file": "{{user `iso_file`}}",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<enter><wait>",
+        "<wait45s>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "<enter><wait>",
+        "{{ user `pm_host1-country` }}<enter><tab><wait><tab><spacebar>",
+        "<down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down><down>",
+        "<enter><wait><tab><wait><tab><wait>",
+        "<enter><wait>",
+        "{{ user `pm_host1-passwd` }}<tab>",
+        "{{ user `pm_host1-passwd` }}<tab>",
+        "{{ user `pm_host1-mail` }}<tab><tab><enter><wait>",
+        "{{ user `pm_host1-fqdn` }}<tab>",
+        "{{ user `pm_host1-ipnm-mgmt` }}<tab>",
+        "{{ user `pm_host1-ip-mask` }}<tab>",
+        "{{ user `pm_host1-ip-gw` }}<tab>",
+        "{{ user `pm_host1-ip-dns1` }}<tab><tab><enter><wait>",
+        "<enter><wait3m><enter><wait1m>"
+      ],
+
+      "communicator": "ssh",
+      "ssh_host":     "172.26.9.156",
+      "ssh_username": "{{user `pm_host1-login` }}",
+      "ssh_password": "{{user `pm_host1-passwd` }}",
+      "ssh_timeout": "2m",
+
+      "unmount_iso": true,
+      "template_name": "pve-boot-command",
+      "template_description": "PVE plus boot-command, generated on {{ isotime \"2006-01-02T15:04:05Z\" }}"
+    }]
+  }
